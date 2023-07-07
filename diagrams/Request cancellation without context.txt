@@ -1,0 +1,22 @@
+title Request cancellation without context
+
+participant Bobby
+participant Application
+participant Lazy Backend
+
+Bobby-:1>Application:Send a request to \nhttp://localhost:8080/coldplay/paradise
+
+Application-:1>Lazy Backend:Send a request to a backend \nthat take 50 seconds to respond
+activate Application
+
+Bobby-#red:2>Application:Bobby close its http request\nbecause it's far to long
+
+Application->Application:nothing happens and the goroutine wait an answer \nthat will never be used :(
+
+Lazy Backend-:1>Application:eventually an answer after 50 seconds
+
+
+Application->Application:then goroutine stops 
+
+deactivate Application
+
