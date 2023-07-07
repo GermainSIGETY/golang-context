@@ -8,8 +8,10 @@ import (
 )
 
 func main() {
-	r := gin.Default()
-	r.GET("/coldplay/paradise", func(ginContext *gin.Context) {
+	engine := gin.Default()
+
+	// create an handler
+	engine.GET("/coldplay/paradise", func(ginContext *gin.Context) {
 
 		go watchClientRequestContext(ginContext.Request.Context())
 
@@ -18,12 +20,16 @@ func main() {
 			"message": "Para-para-paradise",
 		})
 	})
-	r.Run() // wait for requests on  http://localhost:8080/coldplay/paradise
+	engine.Run() // wait for requests on  http://localhost:8080/coldplay/paradise
 }
 
 func handleParadise(clientRequestContext context.Context) {
 	fmt.Println("start handling Paradise")
-	req, _ := http.NewRequestWithContext(clientRequestContext, "GET", "https://httpstat.us/200?sleep=50000", nil)
+
+	// Here the point : we pass client's http request context to our http client:
+	// now our http client is able to stop its request if Bobby leaves
+	req, _ := http.NewRequestWithContext(clientRequestContext,
+		"GET", "https://httpstat.us/200?sleep=50000", nil)
 	client := http.DefaultClient
 	res, err := client.Do(req)
 

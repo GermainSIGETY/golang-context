@@ -10,8 +10,8 @@ func main() {
 
 	// Create a context with a cancellation feature
 	// it returns :
-	// a context with a way to check whether 'it's done or not done' (see below)
-	// a cancel function : 'call it and everything will be cancelled, and it's done'
+	//- a context with a way to check whether it's done or not' (see below)
+	//- a cancel function : 'call it and everything will be cancelled'
 	cancellableContext, cancelFunction := context.WithCancelCause(context.Background())
 
 	//launch a treatment in another go routine ; concurrent treatment
@@ -20,7 +20,7 @@ func main() {
 	//wait 4 seconds
 	time.Sleep(time.Second * 4)
 
-	//then I cancel all that stuff
+	//then cancel all that stuff, and precise a cause
 	cancelFunction(fmt.Errorf("crap, it has failed in main function"))
 
 	//then I wait another second before exiting the program
@@ -31,8 +31,9 @@ func main() {
 func doSomething(cancellableContext context.Context) {
 	for {
 		select {
-		// A context expose a 'Done()' function. This function returns a channel
-		// when an element is read from this channel 'it's the signal that it's done Buddy';
+		// A context exposes a 'Done()' function, that returns a channel :
+		// when an element is read from this channel,
+		// 'it's the signal that it's done Buddy';
 		// you can stop and trash everything related to your current treatment.
 		case <-cancellableContext.Done():
 			cause := context.Cause(cancellableContext)

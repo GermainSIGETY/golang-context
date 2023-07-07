@@ -8,7 +8,8 @@ import (
 
 func main() {
 
-	// Create a context with a timeout feature : 'in 4 seconds, everything will be done Buddy'
+	// Create a context with a timeout feature :
+	// 'in 4 seconds, everything will be done Buddy'
 	// it returns :
 	// a context with a way to check whether 'it's done or not done' (see below)
 	// a cancel function too (underscored here because we won't use it : see  directory 2_USE_CONTEXT_WITH_CANCEL)
@@ -25,8 +26,9 @@ func main() {
 func doSomething(contextWithTimeout context.Context) {
 	for {
 		select {
-		// A context expose a 'Done()' function. This function returns a channel
-		// when an element is read from this channel 'it's the signal that it's done Buddy';
+		// A context exposes a 'Done()' function, that returns a channel :
+		// when an element is read from this channel,
+		// 'it's the signal that it's done Buddy';
 		// you can stop and trash everything related to your current treatment.
 		case <-contextWithTimeout.Done():
 			fmt.Println("It's Done Buddy")
